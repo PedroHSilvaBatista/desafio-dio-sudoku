@@ -17,6 +17,8 @@ import static java.util.Objects.nonNull;
 
 public class Main {
 
+    // JOGO SUDOKU VIA TERMINAL
+
     private final static Scanner scanner = new Scanner(System.in);
     private static Board board;
     private final static int BOARD_LIMIT = 9;

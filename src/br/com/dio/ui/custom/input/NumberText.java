@@ -3,6 +3,8 @@ package br.com.dio.ui.custom.input;
 import br.com.dio.model.Space;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 import static java.awt.Font.PLAIN;
@@ -25,6 +27,31 @@ public class NumberText extends JTextField {
         if (space.isFixed()) {
             this.setText(space.getActual().toString());
         }
+        this.getDocument().addDocumentListener(new DocumentListener() {
+            private void changeSpace() {
+                if (getText().isEmpty()) {
+                    space.clearSpace();
+                    return;
+                }
 
+                space.setActual(Integer.parseInt(getText()));
+            }
+
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changeSpace();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changeSpace();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changeSpace();
+            }
+        });
     }
 }
