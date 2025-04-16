@@ -1,12 +1,17 @@
 package br.com.dio.ui.custom.screen;
 
+import br.com.dio.model.Space;
 import br.com.dio.service.BoardService;
 import br.com.dio.ui.custom.button.CheckGameStatusButton;
 import br.com.dio.ui.custom.button.FinishGameButton;
 import br.com.dio.ui.custom.button.ResetButton;
 import br.com.dio.ui.custom.frame.MainFrame;
+import br.com.dio.ui.custom.input.NumberText;
 import br.com.dio.ui.custom.panel.MainPanel;
+import br.com.dio.ui.custom.panel.SudokuSector;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -30,12 +35,37 @@ public class MainScreen {
         JPanel mainPanel = new MainPanel(dimension);
         JFrame mainFrame = new MainFrame(dimension, mainPanel);
 
+        for(int r=0; r < 9; r+=3) {
+            var endRow = r + 2;
+            for(int c=0; c < 9; c+=3) {
+                var endCol = c + 2;
+                var spaces = getSpacesFromSector(boardService.getSpaces(), c, endCol, r, endRow);
+                mainPanel.add(generateSection(spaces));
+            }
+        }
+
         addResetButton(mainPanel);
         addCheckGameStatusButton(mainPanel);
         addFinishGameButton(mainPanel);
 
         mainFrame.revalidate();
         mainFrame.repaint();
+    }
+
+    private List<Space> getSpacesFromSector(final List<List<Space>> spaces, final int initCol, final int endCol, final int initRow, final int endRow) {
+        List<Space> spaceSector = new ArrayList<>();
+
+        for (int r = initRow; r <= endRow; r++) {
+            for (int c = initCol; c <= endCol; c++) {
+                spaceSector.add(spaces.get(c).get(r));
+            }
+        }
+        return spaceSector;
+    }
+
+    private JPanel generateSection(final List<Space> spaces) {
+        List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
+        return new SudokuSector(fields);
     }
 
     private void addFinishGameButton(final JPanel mainPanel) {
@@ -61,7 +91,7 @@ public class MainScreen {
                 case INCOMPLETE -> "O jogo está incompleto";
                 case COMPLETE -> "O jogo está completo";
             };
-            message += hasErros ? " e contém erros": " não contém erros";
+            message += hasErros ? " e contém erros": " e não contém erros";
             JOptionPane.showMessageDialog(null, message);
         });
         mainPanel.add(MainScreen.this.checkGameStatusButton);
