@@ -2,6 +2,7 @@ package br.com.dio.ui.custom.screen;
 
 import br.com.dio.model.Space;
 import br.com.dio.service.BoardService;
+import br.com.dio.service.NotifierService;
 import br.com.dio.ui.custom.button.CheckGameStatusButton;
 import br.com.dio.ui.custom.button.FinishGameButton;
 import br.com.dio.ui.custom.button.ResetButton;
@@ -16,12 +17,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+import static br.com.dio.service.EventEnum.CLEAR_SPACE;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class MainScreen {
 
     private final static Dimension dimension = new Dimension(600, 600);
     private final BoardService boardService;
+    private final NotifierService notifierService;
 
     private JButton checkGameStatusButton;
     private JButton resetButton;
@@ -29,6 +32,7 @@ public class MainScreen {
 
     public MainScreen(final Map<String, String> gameConfig) {
         this.boardService = new BoardService(gameConfig);
+        this.notifierService = new NotifierService();
     }
 
     public void buildMainScreen() {
@@ -110,7 +114,7 @@ public class MainScreen {
 
             if (dialogResult == 0) {
                 boardService.reset();
-
+                notifierService.notify(CLEAR_SPACE);
             }
         });
         mainPanel.add(resetButton);
