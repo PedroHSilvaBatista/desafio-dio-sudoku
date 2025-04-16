@@ -13,7 +13,7 @@ public class NotifierService {
         put(CLEAR_SPACE, new ArrayList<>());
     }};
 
-    public void subscriber(final EventEnum eventType, EventListener listener) {
+    public void subscribe(final EventEnum eventType, EventListener listener) {
         var selectedListeners = listeners.get(eventType);
         selectedListeners.add(listener);
     }
